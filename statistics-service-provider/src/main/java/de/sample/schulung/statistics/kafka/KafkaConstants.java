@@ -1,4 +1,4 @@
-package de.sample.schulung.accounts.kafka;
+package de.sample.schulung.statistics.kafka;
 
 import lombok.experimental.UtilityClass;
 
