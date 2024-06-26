@@ -1,5 +1,6 @@
 package de.sample.schulung.accounts;
 
+import de.sample.schulung.accounts.kafka.AutoConfigureKafkaTemplateMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
+@AutoConfigureKafkaTemplateMock
 class AccountsApiTests {
 
   @Autowired
