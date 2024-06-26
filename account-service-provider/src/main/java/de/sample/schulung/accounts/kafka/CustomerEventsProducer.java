@@ -15,6 +15,7 @@ public class CustomerEventsProducer {
   private final KafkaTemplate<UUID, CustomerEventKafkaDto> kafkaTemplate;
   private final CustomerEventKafkaDtoMapper eventDtoMapper;
 
+  // TODO @KafkaProducer(topic=...) interceptor
   @EventListener
   public void handle(CustomerCreatedEvent event) {
     final var messageKey = event.customer().getUuid();
