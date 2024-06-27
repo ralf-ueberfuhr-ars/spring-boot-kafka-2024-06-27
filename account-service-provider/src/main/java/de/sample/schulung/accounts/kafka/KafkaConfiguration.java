@@ -16,6 +16,7 @@ public class KafkaConfiguration {
     return TopicBuilder
       .name(KafkaConstants.CUSTOMER_EVENTS_TOPIC)
       // .partitions(3)
+      // .replicas(3)
       .build();
   }
 
