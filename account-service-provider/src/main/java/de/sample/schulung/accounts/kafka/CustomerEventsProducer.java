@@ -1,9 +1,10 @@
 package de.sample.schulung.accounts.kafka;
 
 import de.sample.schulung.accounts.domain.events.CustomerCreatedEvent;
+import de.sample.schulung.accounts.kafka.interceptor.KafkaProducer;
+import de.sample.schulung.accounts.kafka.interceptor.KafkaRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -12,18 +13,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomerEventsProducer {
 
-  private final KafkaTemplate<UUID, CustomerEventKafkaDto> kafkaTemplate;
   private final CustomerEventKafkaDtoMapper eventDtoMapper;
 
-  // TODO @KafkaProducer(topic=...) interceptor
   @EventListener
-  public void handle(CustomerCreatedEvent event) {
-    final var messageKey = event.customer().getUuid();
-    final var message = eventDtoMapper.map(event);
-    kafkaTemplate.send(
-      KafkaConstants.DEFAULT_CUSTOMER_EVENTS_TOPIC,
-      messageKey,
-      message
+  @KafkaProducer(topic = KafkaConstants.DEFAULT_CUSTOMER_EVENTS_TOPIC)
+  public KafkaRecord<UUID, CustomerEventKafkaDto> handle(CustomerCreatedEvent event) {
+    return new KafkaRecord<>(
+      event.customer().getUuid(),
+      eventDtoMapper.map(event)
     );
   }
 
