@@ -1,5 +1,6 @@
 package de.sample.schulung.accounts.domain;
 
+import de.sample.schulung.accounts.kafka.AutoConfigureKafkaTemplateMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.verify;
   }
 )
 @AutoConfigureTestDatabase
+@AutoConfigureKafkaTemplateMock
 public class CustomersInitializerTests {
 
   @MockBean
