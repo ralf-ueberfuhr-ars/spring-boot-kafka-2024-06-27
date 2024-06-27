@@ -16,10 +16,26 @@ public class CustomerEventsProducer {
 
   @EventListener
   public void handleCustomerCreatedEvent(CustomerCreatedEvent event) {
+    // map event to record
+    var customer = event.customer();
+    var payload = new CustomerEventRecord(
+      "created",
+      customer.getUuid(),
+      new CustomerRecord(
+        customer.getName(),
+        customer.getDateOfBirth(),
+        switch(customer.getState()) {
+          case ACTIVE -> "active";
+          case LOCKED -> "locked";
+          case DISABLED -> "disabled";
+        }
+      )
+    );
+    // send message
     kafkaTemplate.send(
       KafkaConstants.CUSTOMER_EVENTS_TOPIC,
       event.customer().getUuid(),
-      event.customer() // TODO ???
+      payload
     );
   }
 
