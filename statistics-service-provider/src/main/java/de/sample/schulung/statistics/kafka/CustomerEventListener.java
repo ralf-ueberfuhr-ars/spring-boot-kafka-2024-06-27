@@ -4,6 +4,9 @@ import de.sample.schulung.statistics.domain.CustomersService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -18,13 +21,18 @@ public class CustomerEventListener {
 
   @KafkaListener(
     topics = KafkaConstants.DEFAULT_CUSTOMER_EVENTS_TOPIC
-    // TODO how to aknowledge only after database access
   )
-  public void handleEvent(@Valid @Payload CustomerEventKafkaDto event) {
+  public void handleEvent(
+    @Valid @Payload CustomerEventKafkaDto event,
+    @Header(KafkaHeaders.RECEIVED_PARTITION) String partition,
+    @Header(KafkaHeaders.OFFSET) int offset,
+    Acknowledgment acknowledgment
+  ) {
+    System.out.println("Received from partition " + partition + " / offset: " + offset);
     switch (event.eventType()) {
       case "CREATED":
       case "UPDATED":
-        if("active".equals(event.customer().getState())) {
+        if ("active".equals(event.customer().getState())) {
           var customer = this.mapper.map(event);
           customersService.saveCustomer(customer);
         } else {
@@ -35,6 +43,7 @@ public class CustomerEventListener {
         customersService.deleteCustomer(event.uuid());
         break;
     }
+    acknowledgment.acknowledge();
   }
 
 }
