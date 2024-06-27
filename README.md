@@ -29,3 +29,30 @@ java -jar target/<file>.jar
 # oder
 mvn spring-boot:run
 ```
+
+# Customer Events über Kafka
+
+Producer und Consumer benötigen eine wohldefinierte Schnittstelle. Diese wird hier dokumentiert.
+
+- Name des Topics: `customer-events`
+- Aufteilung der Nachrichten (Partitionierung) nach der UUID des Kunden 
+  (Events für denselben Kunden müssen in derselben Partition landen)
+  - Message Key: `UUID`
+  - Format: `String`
+- Customer-Daten sowie die Art des Events als Payload
+  - Message Payload: `CustomerEventRecord`
+  - Format: `JSON`
+
+Hier ein Beispiel für den Payload:
+
+```json
+{
+  "event-type": "created|replaced|deleted",
+  "uuid": "12345",
+  "customer": {
+    "name": "Tom Mayer",
+    "birthdate": "2002-10-05",
+    "state": "active|locked|disabled"
+  }
+}
+```
