@@ -1,0 +1,6 @@
+spring:
+  kafka:
+    producer:
+      properties:
+        # we disable this in production, but need this for the tests
+        "[spring.json.add.type.headers]": true

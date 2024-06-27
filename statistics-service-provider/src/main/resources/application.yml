@@ -16,6 +16,26 @@ spring:
     console:
       path: /db
       enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      auto-offset-reset: earliest
+      group-id: customer-statistics
+      # We could name the JsonDeserializer here,
+      # but this would lead to errors we cannot handle when deserialization fails
+      key-deserializer: org.apache.kafka.common.serialization.UUIDDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        "[spring.json.trusted.packages]": de.sample.schulung.statistics.kafka
+        # for enhanced type mappings, see
+        # - (current)      https://docs.spring.io/spring-kafka/docs/current/reference/html/#serdes-mapping-types
+        # - (fixed: 3.0.6) https://docs.spring.io/spring-kafka/docs/3.0.6/reference/html/#serdes-mapping-types
+        "[spring.json.use.type.headers]": false
+        "[spring.json.value.default.type]": de.sample.schulung.statistics.kafka.CustomerEventKafkaDto
+        "[spring.deserializer.value.delegate.class]": org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false # do not auto-commit --> Lektion 2
+    listener:
+      ack-mode: MANUAL
 application:
   init-sample-data:
     enabled: true
