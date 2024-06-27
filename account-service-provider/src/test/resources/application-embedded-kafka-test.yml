@@ -1,6 +1,5 @@
 spring:
   kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
     producer:
       properties:
         # we disable this in production, but need this for the tests

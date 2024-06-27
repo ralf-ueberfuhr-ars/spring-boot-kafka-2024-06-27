@@ -2,16 +2,10 @@ package de.sample.schulung.accounts.kafka;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockReset;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.lang.annotation.*;
-
-import static org.mockito.Mockito.RETURNS_MOCKS;
-import static org.mockito.Mockito.mock;
 
 /**
  * Auto-configures a {@link KafkaTemplate} mock in the test context.
@@ -26,21 +20,7 @@ import static org.mockito.Mockito.mock;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
-@Import(AutoConfigureKafkaTemplateMock.KafkaTemplateMockConfiguration.class)
+@MockBean(KafkaTemplate.class)
 public @interface AutoConfigureKafkaTemplateMock {
-
-    @TestConfiguration
-    class KafkaTemplateMockConfiguration {
-
-        @Bean
-        KafkaTemplate<?,?> createKafkaTemplateMock() {
-            return mock(
-              KafkaTemplate.class,
-              MockReset
-                .withSettings(MockReset.AFTER)
-                .defaultAnswer(RETURNS_MOCKS)
-            );
-        }
-    }
 
 }

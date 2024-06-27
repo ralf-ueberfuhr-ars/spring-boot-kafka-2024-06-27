@@ -28,6 +28,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.annotation.*;
@@ -55,6 +56,9 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.TYPE)
 // Kafka Configuration
 @EmbeddedKafka
+@TestPropertySource(
+  properties = "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
+)
 @Import({
   AutoConfigureEmbeddedKafka.EmbeddedKafkaConfiguration.class,
   AutoConfigureEmbeddedKafka.KafkaMessageListenerContainerLifecycleHandler.class
