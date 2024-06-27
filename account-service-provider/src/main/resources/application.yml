@@ -22,7 +22,8 @@ spring:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.UUIDSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer # Jackson
+      # https://docs.spring.io/spring-kafka/reference/kafka/serdes.html#json-serde (Jackson)
+      value-serializer: de.sample.schulung.accounts.kafka.CustomJsonSerializer
       properties:
         # do not serialize the class name into the message
         "[spring.json.add.type.headers]": false

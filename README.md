@@ -47,7 +47,7 @@ Hier ein Beispiel für den Payload:
 
 ```json
 {
-  "event-type": "created|replaced|deleted",
+  "event_type": "created|replaced|deleted",
   "uuid": "12345",
   "customer": {
     "name": "Tom Mayer",
