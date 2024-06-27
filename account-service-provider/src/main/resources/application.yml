@@ -3,7 +3,20 @@ server:
 spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
+  datasource:
+    url: jdbc:h2:./.local-db/customers
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      path: /db
+      enabled: true
 application:
   customers:
     initialization:
-      enabled: ${CUSTOMERS_INITIALIZATION_ENABLED:false}
+      enabled: ${CUSTOMERS_INITIALIZATION_ENABLED:true}
