@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verify;
 )
 @AutoConfigureTestDatabase
 @AutoConfigureKafkaTemplateMock
+@AutoConfigureEnabledInitialization
 public class CustomersInitializerTests {
 
   @MockBean

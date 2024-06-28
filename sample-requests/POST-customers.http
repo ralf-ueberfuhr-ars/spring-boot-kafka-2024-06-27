@@ -3,8 +3,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Tom Mayer",
-  "birthdate": "1985-07-30",
+  "name": "Julia Schmidt",
+  "birthdate": "1996-01-10",
   "state": "active"
 }
 

@@ -16,6 +16,21 @@ spring:
     console:
       path: /db
       enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      #de.sample.schulung.statistics.kafka.CustomJsonDeserializer
+      properties:
+        "[spring.json.use.type.headers]": false
+        "[spring.json.value.default.type]": de.sample.schulung.statistics.kafka.CustomerEventRecord
+        "[spring.deserializer.value.delegate.class]": de.sample.schulung.statistics.kafka.CustomJsonDeserializer
+        "[spring.deserializer.value.function]": de.sample.schulung.statistics.kafka.CustomDeserializationFailureHandler
+      group-id: customer-statistics
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual
 application:
   init-sample-data:
     enabled: true
