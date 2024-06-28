@@ -5,6 +5,7 @@ import de.sample.schulung.accounts.domain.events.CustomerDeletedEvent;
 import de.sample.schulung.accounts.domain.events.CustomerReplacedEvent;
 import de.sample.schulung.accounts.kafka.interceptor.KafkaProducer;
 import de.sample.schulung.accounts.kafka.interceptor.KafkaRecord;
+import de.sample.schulung.accounts.persistence.transactions.events.ConditionalOnTransactionsDisabled;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@ConditionalOnTransactionsDisabled
 public class CustomerEventsProducer {
 
   private final CustomerEventRecordMapper mapper;
