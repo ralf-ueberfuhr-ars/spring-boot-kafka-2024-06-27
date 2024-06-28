@@ -18,6 +18,14 @@ spring:
       enabled: true
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer: #DTL
+      # key-serializer: org.apache.kafka.common.serialization.UUIDSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # https://docs.spring.io/spring-kafka/reference/kafka/serdes.html#json-serde (Jackson)
+      value-serializer: de.sample.schulung.statistics.kafka.CustomJsonSerializer
+      properties:
+        # do not serialize the class name into the message
+        "[spring.json.add.type.headers]": false
     consumer:
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       #de.sample.schulung.statistics.kafka.CustomJsonDeserializer
