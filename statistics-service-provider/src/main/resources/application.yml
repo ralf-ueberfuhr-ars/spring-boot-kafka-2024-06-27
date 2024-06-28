@@ -25,6 +25,9 @@ spring:
         "[spring.json.value.default.type]": de.sample.schulung.statistics.kafka.CustomerEventRecord
       group-id: customer-statistics
       auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual
 application:
   init-sample-data:
     enabled: true

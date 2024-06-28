@@ -6,6 +6,7 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -24,7 +25,8 @@ public class CustomerEventListener {
   public void consume(
     @Payload CustomerEventRecord record,
     @Header(KafkaHeaders.RECEIVED_PARTITION) String partition,
-    @Header(KafkaHeaders.OFFSET) int offset
+    @Header(KafkaHeaders.OFFSET) int offset,
+    Acknowledgment  acknowledgment
   ) {
     log.info(
       "Received record {} {} (Partition: {}, Offset: {})",
@@ -34,6 +36,7 @@ public class CustomerEventListener {
       offset
     );
     if(record.eventType() == null) {
+      acknowledgment.acknowledge();
       return;
     }
     switch (record.eventType()) {
@@ -57,6 +60,7 @@ public class CustomerEventListener {
       default:
         throw new ValidationException();
     }
+    acknowledgment.acknowledge();
   }
 
 }
