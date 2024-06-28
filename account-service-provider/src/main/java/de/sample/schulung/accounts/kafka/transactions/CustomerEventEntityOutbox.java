@@ -1,5 +1,6 @@
 package de.sample.schulung.accounts.kafka.transactions;
 
+import de.sample.schulung.accounts.kafka.CustomerEventsProducer;
 import de.sample.schulung.accounts.persistence.transactions.events.ConditionalOnTransactionsEnabled;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CustomerEventEntityOutbox {
 
-  private final CustomerEventsFromEntityProducer producer;
+  private final CustomerEventsProducer producer;
   private final CustomerEventEntityRepository repo;
+  private final CustomerEventEntityToCustomerRecordMapper mapper;
 
   // TODO if sending lasts more than 5 seconds, we should be aware that we could read the data twice!
   @Scheduled(fixedRate = 5000)
@@ -33,7 +35,7 @@ public class CustomerEventEntityOutbox {
       entity.getCustomerUuid(),
       entity.getId()
     );
-    this.producer.sendEvent(entity);
+    this.producer.produce(mapper.map(entity));
     this.repo.delete(entity);
   }
 

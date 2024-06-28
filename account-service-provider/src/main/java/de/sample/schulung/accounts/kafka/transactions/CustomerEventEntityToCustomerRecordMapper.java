@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnTransactionsEnabled
 @Component
 @RequiredArgsConstructor
-public class CustomerEventEntityToCustomerEventRecordMapper {
+public class CustomerEventEntityToCustomerRecordMapper {
 
   private final CustomerEventRecordMapper delegate;
 
