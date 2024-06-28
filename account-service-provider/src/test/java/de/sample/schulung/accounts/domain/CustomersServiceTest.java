@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @AutoConfigureKafkaTemplateMock
+@AutoConfigureDisabledInitialization
 public class CustomersServiceTest {
 
   @Autowired

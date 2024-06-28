@@ -1,5 +1,6 @@
 package de.sample.schulung.accounts.boundary;
 
+import de.sample.schulung.accounts.domain.AutoConfigureDisabledInitialization;
 import de.sample.schulung.accounts.domain.CustomersService;
 import de.sample.schulung.accounts.domain.NotFoundException;
 import de.sample.schulung.accounts.kafka.AutoConfigureKafkaTemplateMock;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
 @AutoConfigureKafkaTemplateMock
+@AutoConfigureDisabledInitialization
 public class AccountsBoundaryTests {
 
   @Autowired
