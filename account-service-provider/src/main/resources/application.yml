@@ -31,3 +31,6 @@ application:
   customers:
     initialization:
       enabled: ${CUSTOMERS_INITIALIZATION_ENABLED:true}
+  persistence:
+    # if enabled, Transactional Outbos is possible
+    enable-transactional-events: true

@@ -22,8 +22,8 @@ import static org.assertj.core.api.Assertions.from;
 @AutoConfigureTestDatabase
 @AutoConfigureEmbeddedKafka
 @AutoConfigureDisabledInitialization
-@AutoConfigureTransactionalOutboxDisabled
-class CustomerEventsProducerTests {
+@AutoConfigureTransactionalOutboxEnabled
+class CustomerEventsProducerTransactionalOutboxTests {
 
   @Autowired
   CustomersService service;
@@ -40,7 +40,7 @@ class CustomerEventsProducerTests {
 
     service.createCustomer(customer);
 
-    assertThat(context.poll(3, TimeUnit.SECONDS))
+    assertThat(context.poll(8, TimeUnit.SECONDS))
       .isPresent()
       .get()
       .returns(KafkaConstants.CUSTOMER_EVENTS_TOPIC, from(ConsumerRecord::topic))
