@@ -4,7 +4,6 @@ import de.sample.schulung.accounts.domain.Customer;
 import de.sample.schulung.accounts.domain.Customer.CustomerState;
 import de.sample.schulung.accounts.domain.sink.CustomersSink;
 import de.sample.schulung.accounts.persistence.CustomersSinkJpaImpl;
-import de.sample.schulung.accounts.shared.interceptors.PublishEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -22,6 +21,7 @@ public class CustomersSinkWithEventsInTransactionsJpaImpl implements CustomersSi
 
   private final CustomersSinkJpaImpl delegate;
   private final TransactionTemplate transactionTemplate;
+  private final EventProducingCustomersSink eventSink;
 
   @Override
   public Stream<Customer> getCustomers() {
@@ -33,15 +33,10 @@ public class CustomersSinkWithEventsInTransactionsJpaImpl implements CustomersSi
     return delegate.getCustomersByState(state);
   }
 
-  @PublishEvent(CustomerCreatedInTransactionEvent.class)
-  void createCustomerInTransaction(Customer customer) {
-    delegate.createCustomer(customer);
-  }
-
   @Override
   public void createCustomer(Customer customer) {
     transactionTemplate.executeWithoutResult(
-      __ -> this.createCustomerInTransaction(customer)
+      __ -> eventSink.createCustomerInTransaction(customer)
     );
   }
 
@@ -50,27 +45,17 @@ public class CustomersSinkWithEventsInTransactionsJpaImpl implements CustomersSi
     return delegate.findCustomerById(uuid);
   }
 
-  @PublishEvent(CustomerReplacedInTransactionEvent.class)
-  void replaceCustomerInTransaction(Customer customer) {
-    delegate.replaceCustomer(customer);
-  }
-
   @Override
   public void replaceCustomer(Customer customer) {
     transactionTemplate.executeWithoutResult(
-      __ -> this.replaceCustomerInTransaction(customer)
+      __ -> eventSink.replaceCustomerInTransaction(customer)
     );
-  }
-
-  @PublishEvent(CustomerDeletedInTransactionEvent.class)
-  void deleteCustomerInTransaction(UUID uuid) {
-    delegate.deleteCustomer(uuid);
   }
 
   @Override
   public void deleteCustomer(UUID uuid) {
     transactionTemplate.executeWithoutResult(
-      __ -> this.deleteCustomerInTransaction(uuid)
+      __ -> eventSink.deleteCustomerInTransaction(uuid)
     );
   }
 
