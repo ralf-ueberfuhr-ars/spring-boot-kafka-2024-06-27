@@ -3,9 +3,10 @@ package de.sample.schulung.accounts.kafka;
 import de.sample.schulung.accounts.domain.events.CustomerCreatedEvent;
 import de.sample.schulung.accounts.domain.events.CustomerDeletedEvent;
 import de.sample.schulung.accounts.domain.events.CustomerReplacedEvent;
+import de.sample.schulung.accounts.kafka.interceptor.KafkaProducer;
+import de.sample.schulung.accounts.kafka.interceptor.KafkaRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -14,42 +15,32 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomerEventsProducer {
 
-  private final KafkaTemplate<UUID, Object> kafkaTemplate;
   private final CustomerEventRecordMapper mapper;
 
   @EventListener
-  public void handleCustomerCreatedEvent(CustomerCreatedEvent event) {
-    // map event to record
-    var payload = this.mapper.map(event);
-    // send message
-    kafkaTemplate.send(
-      KafkaConstants.CUSTOMER_EVENTS_TOPIC,
+  @KafkaProducer(topic = KafkaConstants.CUSTOMER_EVENTS_TOPIC)
+  public KafkaRecord<UUID, CustomerEventRecord> handleCustomerCreatedEvent(CustomerCreatedEvent event) {
+    return new KafkaRecord<>(
       event.customer().getUuid(),
-      payload
+      this.mapper.map(event)
     );
   }
 
   @EventListener
-  public void handleCustomerReplacedEvent(CustomerReplacedEvent event) {
-    // map event to record
-    var payload = this.mapper.map(event);
-    // send message
-    kafkaTemplate.send(
-      KafkaConstants.CUSTOMER_EVENTS_TOPIC,
+  @KafkaProducer(topic = KafkaConstants.CUSTOMER_EVENTS_TOPIC)
+  public KafkaRecord<UUID, CustomerEventRecord> handleCustomerReplacedEvent(CustomerReplacedEvent event) {
+    return new KafkaRecord<>(
       event.customer().getUuid(),
-      payload
+      this.mapper.map(event)
     );
   }
 
   @EventListener
-  public void handleCustomerDeletedEvent(CustomerDeletedEvent event) {
-    // map event to record
-    var payload = this.mapper.map(event);
-    // send message
-    kafkaTemplate.send(
-      KafkaConstants.CUSTOMER_EVENTS_TOPIC,
+  @KafkaProducer(topic = KafkaConstants.CUSTOMER_EVENTS_TOPIC)
+  public KafkaRecord<UUID, CustomerEventRecord> handleCustomerDeletedEvent(CustomerDeletedEvent event) {
+    return new KafkaRecord<>(
       event.uuid(),
-      payload
+      this.mapper.map(event)
     );
   }
 
